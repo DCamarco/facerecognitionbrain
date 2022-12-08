@@ -15,11 +15,30 @@ class App extends Component {
     this.state = {
       input: '',
       imageUrl: '',
-      box: '',
+      box: {},
       route: 'signin',
-      isSignedIn: false
+      isSignedIn: false,
+      user: {
+        id: '',
+        name: '',
+        email: '',
+        entries: 0,
+        joined: ''
+      }
     }
   }
+
+  loadUser = (data) => {
+    this.setState({user: {
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      entries: data.entries,
+      joined: data.joined
+    }})
+  }
+
+
   onRouteChange = (route) => {
     if (route === 'signout') {
       this.setState({isSignedIn: false})
@@ -32,18 +51,18 @@ class App extends Component {
     const { isSignedIn,  route  } = this.state;
     return (
       <div className="App">
-        <ParticlesBg num={500} type="cobweb" bg={true} />
+        <ParticlesBg num={200} type="cobweb" bg={true} />
         <Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange}/>
         { route === 'home' 
         ? <div>
           <Logo />
           <ImageLinkForm />
-          <Rank />
+          <Rank name={this.state.user.name} entries={this.state.user.entries} />
           </div>
         : (
           route === 'signin'
-          ? <SignIn onRouteChange={this.onRouteChange}/>
-          : <Register onRouteChange={this.onRouteChange}/>
+          ? <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
+          : <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
         )
         /* {
            <div>
